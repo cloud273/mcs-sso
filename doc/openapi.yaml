@@ -1,0 +1,686 @@
+openapi: 3.0.1
+info:
+  title: sso api
+  version: 1.0.0
+servers:
+- url: http://localhost:4005/api
+paths:
+  /account:
+    get:
+      tags:
+      - USER
+      summary: Get basic information
+      operationId: getBasic
+      parameters:
+      - name: token
+        in: query
+        description: Access token
+        required: true
+        schema:
+          type: string
+          default: "UaVrAs8Vr9Iu2oict4wEjvL9NjJ1nkfjPj7xfLMMeW0nH46k09v44dMK29RsxwCn5XMVwgT09ut613r3B6gimh"
+      - name: password
+        in: query
+        description: Password
+        required: false
+        schema:
+          type: string
+          default: "111111"
+      - name: type
+        in: query
+        required: true
+        description: Account type
+        schema:
+          type: string
+          default: account
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  username:
+                    type: string
+        400:
+          description: Bad request
+        403:
+          description: Invalid token or type
+        404:
+          description: Invalid password
+        500:
+          description: Unknown
+    post:
+      tags:
+      - USER
+      summary: Register
+      operationId: register
+      requestBody:
+        content:
+          application/json:
+            schema:
+              required:
+              - password
+              - type
+              - username
+              type: object
+              properties:
+                username:
+                  $ref: '#/components/schemas/Username'
+                password:
+                  $ref: '#/components/schemas/Password'
+                type:
+                  $ref: '#/components/schemas/Type'
+                language:
+                  $ref: '#/components/schemas/Language'
+        required: true
+      responses:
+        201:
+          description: Created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    $ref: '#/components/schemas/Message'
+        400:
+          description: Bad request
+        409:
+          description: Existed
+        500:
+          description: Unknown
+  /account/reset-activation-code:
+    patch:
+      tags:
+      - USER
+      summary: Reset activation code (Resend activation code)
+      operationId: resetActivationCode
+      requestBody:
+        content:
+          application/json:
+            schema:
+              required:
+              - type
+              - username
+              type: object
+              properties:
+                username:
+                  $ref: '#/components/schemas/Username'
+                type:
+                  $ref: '#/components/schemas/Type'
+                language:
+                  $ref: '#/components/schemas/Language'
+        required: true
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    $ref: '#/components/schemas/Message'
+        400:
+          description: Bad request
+        404:
+          description: Not found
+        500:
+          description: Unknown
+  /account/activate:
+    patch:
+      tags:
+      - USER
+      summary: Activation
+      operationId: activate
+      requestBody:
+        content:
+          application/json:
+            schema:
+              required:
+              - code
+              - type
+              - username
+              type: object
+              properties:
+                username:
+                  $ref: '#/components/schemas/Username'
+                type:
+                  $ref: '#/components/schemas/Type'
+                code:
+                  $ref: '#/components/schemas/Code'
+        required: true
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+        400:
+          description: Bad request
+        403:
+          description: Invalid code
+        404:
+          description: Not found
+        406:
+          description: Expired code
+        500:
+          description: Unknown
+  /account/reset-password-request:
+    patch:
+      tags:
+      - USER
+      summary: Reset password request (Forgot password)
+      operationId: resetPasswordRequest
+      requestBody:
+        content:
+          application/json:
+            schema:
+              required:
+              - type
+              - username
+              type: object
+              properties:
+                username:
+                  $ref: '#/components/schemas/Username'
+                type:
+                  $ref: '#/components/schemas/Type'
+                language:
+                  $ref: '#/components/schemas/Language'
+        required: true
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    $ref: '#/components/schemas/Message'
+        400:
+          description: Bad request
+        404:
+          description: Not found
+        500:
+          description: Unknown
+  /account/reset-password:
+    patch:
+      tags:
+      - USER
+      summary: Reset password
+      operationId: resetPassword
+      requestBody:
+        content:
+          application/json:
+            schema:
+              required:
+              - code
+              - password
+              - type
+              - username
+              type: object
+              properties:
+                username:
+                  $ref: '#/components/schemas/Username'
+                password:
+                  $ref: '#/components/schemas/Password'
+                type:
+                  $ref: '#/components/schemas/Type'
+                code:
+                  $ref: '#/components/schemas/Code'
+        required: true
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+        400:
+          description: Bad request
+        403:
+          description: Invalid code
+        404:
+          description: Not found
+        406:
+          description: Expired code
+        500:
+          description: Unknown
+  /account/login:
+    patch:
+      tags:
+      - USER
+      summary: Login
+      operationId: login
+      requestBody:
+        content:
+          application/json:
+            schema:
+              required:
+              - password
+              - type
+              - username
+              type: object
+              properties:
+                username:
+                  $ref: '#/components/schemas/Username'
+                password:
+                  $ref: '#/components/schemas/Password'
+                type:
+                  $ref: '#/components/schemas/Type'
+        required: true
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+        400:
+          description: Bad request
+        401:
+          description: Invalid password
+        403:
+          description: Inactived
+        404:
+          description: Not found (invalid token or non-existed)
+        500:
+          description: Unknown
+  /account/update-password:
+    patch:
+      tags:
+      - USER
+      summary: Update password
+      operationId: updatePassword
+      requestBody:
+        content:
+          application/json:
+            schema:
+              required:
+              - password
+              - newPassword
+              - token
+              - type
+              type: object
+              properties:
+                token:
+                  $ref: '#/components/schemas/Token'
+                password:
+                  $ref: '#/components/schemas/Password'
+                newPassword:
+                  $ref: '#/components/schemas/Password'
+                type:
+                  $ref: '#/components/schemas/Type'
+        required: true
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+        400:
+          description: Bad request
+        403:
+          description: Invalid token
+        404:
+          description: Invalid password
+        500:
+          description: Unknown
+  /admin/account:
+    get:
+      tags:
+      - ADMIN
+      summary: Get account
+      operationId: adminGetAccount
+      parameters:
+      - name: token
+        in: header
+        description: Admin access token
+        required: true
+        schema:
+          type: string
+          default: "73NuuN8wPVhScY5+6K7Y4IkRpMSwveojrhingtYirAUw+cRcKNGqRrMGBtYJ21kmS9T3uxsirsMh2rQacrALSQ"
+      - name: username
+        in: query
+        description: Email or phone
+        required: true
+        schema:
+          type: string
+          default: user@mailinator.com
+      - name: type
+        in: query
+        description: Account type
+        required: true
+        schema:
+          type: string
+          default: account
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccountDetail'
+        400:
+          description: Bad request
+        403:
+          description: Wrong Token
+        404:
+          description: Not found
+    post:
+      tags:
+      - ADMIN
+      summary: Create Account
+      operationId: adminCreateCreate
+      parameters:
+      - name: token
+        in: header
+        description: Admin access token
+        required: true
+        schema:
+          type: string
+          default: "73NuuN8wPVhScY5+6K7Y4IkRpMSwveojrhingtYirAUw+cRcKNGqRrMGBtYJ21kmS9T3uxsirsMh2rQacrALSQ"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              required:
+              - actived
+              - password
+              - type
+              - username
+              type: object
+              properties:
+                username:
+                  $ref: '#/components/schemas/Username'
+                password:
+                  $ref: '#/components/schemas/Password'
+                type:
+                  $ref: '#/components/schemas/Type'
+                actived:
+                  type: boolean
+        required: true
+      responses:
+        201:
+          description: Created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+        400:
+          description: Bad request
+        403:
+          description: Invalid Token
+        409:
+          description: Existed
+        500:
+          description: Unknown
+    delete:
+      tags:
+      - ADMIN
+      summary: Delete account
+      operationId: adminDeleteAccount
+      parameters:
+      - name: token
+        in: header
+        description: Admin access token
+        required: true
+        schema:
+          type: string
+          default: "73NuuN8wPVhScY5+6K7Y4IkRpMSwveojrhingtYirAUw+cRcKNGqRrMGBtYJ21kmS9T3uxsirsMh2rQacrALSQ"
+      - name: username
+        in: query
+        description: Email or phone
+        required: true
+        schema:
+          type: string
+          default: user@mailinator.com
+      - name: type
+        in: query
+        description: Account type
+        required: true
+        schema:
+          type: string
+          default: account
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+        400:
+          description: Bad request
+        403:
+          description: Invalid Token
+        404:
+          description: Not found
+        500:
+          description: Unknown
+  /admin/account/username:
+    patch:
+      tags:
+      - ADMIN
+      summary: Update account username
+      operationId: adminUpdateAccountUsername
+      parameters:
+      - name: token
+        in: header
+        description: Admin access token
+        required: true
+        schema:
+          type: string
+          default: "73NuuN8wPVhScY5+6K7Y4IkRpMSwveojrhingtYirAUw+cRcKNGqRrMGBtYJ21kmS9T3uxsirsMh2rQacrALSQ"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              required:
+              - type
+              - username
+              - newUsername
+              type: object
+              properties:
+                username:
+                  $ref: '#/components/schemas/Username'
+                newUsername:
+                  $ref: '#/components/schemas/Username'
+                type:
+                  $ref: '#/components/schemas/Type'
+        required: true
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+        400:
+          description: Bad request
+        403:
+          description: Invalid Token
+        404:
+          description: Not found
+        409:
+          description: Existed
+        500:
+          description: Unknown
+  /admin/account/delete-token:
+    patch:
+      tags:
+      - ADMIN
+      summary: Reset account token
+      operationId: adminResetAccountToken
+      parameters:
+      - name: token
+        in: header
+        description: Admin access token
+        required: true
+        schema:
+          type: string
+          default: "73NuuN8wPVhScY5+6K7Y4IkRpMSwveojrhingtYirAUw+cRcKNGqRrMGBtYJ21kmS9T3uxsirsMh2rQacrALSQ"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              required:
+              - type
+              - username
+              type: object
+              properties:
+                username:
+                  $ref: '#/components/schemas/Username'
+                type:
+                  $ref: '#/components/schemas/Type'
+        required: true
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+        400:
+          description: Bad request
+        403:
+          description: Invalid Token
+        404:
+          description: Not found
+        500:
+          description: Unknown
+  /admin/account/list:
+    get:
+      tags:
+      - ADMIN
+      summary: Get list of account
+      operationId: adminGetListAccount
+      parameters:
+      - name: token
+        in: header
+        description: Admin access token
+        required: true
+        schema:
+          type: string
+          default: "73NuuN8wPVhScY5+6K7Y4IkRpMSwveojrhingtYirAUw+cRcKNGqRrMGBtYJ21kmS9T3uxsirsMh2rQacrALSQ"
+      - name: type
+        in: query
+        description: Account type
+        required: true
+        schema:
+          type: string
+          default: account
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AccountBasic'
+        400:
+          description: Bad request  
+        403:
+          description: Invalid Token
+        500:
+          description: Unknown
+components:
+  schemas:
+    ID:
+      type: integer
+      format: int64
+    Username:
+      maxLength: 128
+      type: string
+      example: user@mailinator.com
+      default: user@mailinator.com
+      description: Email or mobile phone
+    Password:
+      maxLength: 128
+      minLength: 6
+      type: string
+      example: "111111"
+      default: "111111"
+    Type:
+      maxLength: 16
+      type: string
+      description: Account type
+      example: account
+      default: account
+    Token:
+      maxLength: 128
+      type: string
+      description: Access token
+    Code:
+      maxLength: 8
+      type: string
+      description: Code used to activate or reset password
+    Language:
+      type: string
+      example: vi
+      default: vi
+      enum:
+      - vi
+      - en
+    Message:
+      type: string
+      enum:
+      - sms
+      - email
+    AccountBasic:
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/ID'
+        username:
+          $ref: '#/components/schemas/Username'
+        type:
+          $ref: '#/components/schemas/Type'
+      xml:
+        name: AccountBasic
+    AccountDetail:
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/ID'
+        username:
+          $ref: '#/components/schemas/Username'
+        type:
+          $ref: '#/components/schemas/Type'
+        actived:
+          type: boolean
+        token:
+          type: string
+        code:
+          $ref: '#/components/schemas/Code'
+      xml:
+        name: Account
