@@ -6,27 +6,26 @@
 git submodule add https://github.com/cloud273/node-utility.git node
 `
 
-### Clone
+### Main
 
 `
 git clone --recurse-submodules https://github.com/cloud273/mcs-sso.git
 `
 
-### Pull
-
 `
 git pull --recurse-submodules
 `
+
+### Sub-modules
 
 `
 git pull origin HEAD:master
 `
 
-### Push
-
 `
 git push origin HEAD:master
 `
+
 
 # Update all packages
 
