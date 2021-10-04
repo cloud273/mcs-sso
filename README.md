@@ -2,7 +2,7 @@
 
 ### Add submodule
 
-`
+`git
 git submodule add https://github.com/cloud273/node-utility node
 `
 
