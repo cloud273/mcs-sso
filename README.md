@@ -33,11 +33,9 @@ git push origin HEAD:master
 npm i -g npm-check-updates
 `
 
-
 `
 ncu -u
 `
-
 
 `
 npm install
