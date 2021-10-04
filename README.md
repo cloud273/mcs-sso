@@ -3,7 +3,7 @@
 ### Add submodule
 
 `
-git submodule add https://github.com/cloud273/node-utility node
+git submodule add https://github.com/cloud273/node-utility.git node
 `
 
 ### Clone
