@@ -64,7 +64,7 @@ export class AdminController {
     async getListBasic(@Req() request: Request, @Res() response: Response) {
         const token = request.get("token")
         if (token != null && token == Constant.server.token) {
-            const type = request.query.type
+            const type = request.query.type as string
             if (type != null 
                 && Account.validate(undefined, type, undefined , undefined, undefined)) {
                 const result = await AdminService.getListBasic(type)
@@ -78,8 +78,8 @@ export class AdminController {
     async getDetail(@Req() request: Request, @Res() response: Response) {
         const token = request.get("token")
         if (token != null && token == Constant.server.token) {
-            const username = request.query.username
-            const type = request.query.type
+            const username = request.query.username as string
+            const type = request.query.type as string
             if (username != null && type != null 
                 && Account.validate(username, type, undefined, undefined, undefined)) {
                 const result = await AdminService.getDetail(username, type)
@@ -93,8 +93,8 @@ export class AdminController {
     async delete(@Req() request: Request, @Res() response: Response) {
         const token = request.get("token")
         if (token != null && token == Constant.server.token) {
-            const username = request.query.username
-            const type = request.query.type
+            const username = request.query.username as string
+            const type = request.query.type as string
             if (username != null && type != null 
                 && Account.validate(username, type, undefined, undefined, undefined)) {
                 const result = await AdminService.delete(username, type)

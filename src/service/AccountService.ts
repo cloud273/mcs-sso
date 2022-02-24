@@ -4,7 +4,7 @@ import { AccountRepository } from "../repository/AccountRepository";
 import { RCode, Language, MessageType } from "../common/Enum";
 import { MessageService } from "../externalService/MessageService";
 import { Constant } from "../../Constant";
-import { Validator } from "class-validator";
+import { isEmail } from "class-validator";
 import { Encrypt } from "../../node/library/utility/Function";
 import { Sql } from "../../node/library/sql/Sql";
 import { Log } from "../../node/library/log/Log";
@@ -22,8 +22,7 @@ export class AccountService {
             const statusCode = Sql.insert(obj)
             if (statusCode == Sql.created) {
                 const lang = language == null ? Language.vi : language
-                const validator = new Validator()
-                if (validator.isEmail(username)) {
+                if (isEmail(username)) {
                     result = Result.init(statusCode, {
                         code: MessageType.email
                     })
@@ -61,8 +60,7 @@ export class AccountService {
             const statusCode = Sql.update(obj)
             if (statusCode == Sql.success) {
                 const lang = language == null ? Language.vi : language
-                const validator = new Validator()
-                if (validator.isEmail(username)) {
+                if (isEmail(username)) {
                     result = Result.init(statusCode, {
                         code: MessageType.email
                     })
@@ -135,8 +133,7 @@ export class AccountService {
             const statusCode = Sql.update(obj)
             if (statusCode == Sql.success) {
                 const lang = language == null ? Language.vi : language
-                const validator = new Validator()
-                if (validator.isEmail(username)) {
+                if (isEmail(username)) {
                     result = Result.init(statusCode, {
                         code: MessageType.email
                     })

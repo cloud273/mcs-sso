@@ -1,13 +1,10 @@
-import { ValidatorConstraint, ValidatorConstraintInterface, ValidationArguments, ValidationOptions, registerDecorator, Validator } from "class-validator";
+import { ValidatorConstraint, ValidatorConstraintInterface, ValidationArguments, ValidationOptions, registerDecorator, isEmail, isMobilePhone } from "class-validator";
 
 @ValidatorConstraint({ name: "EmailMobileValidator", async: false })
 export class EmailMobileValidator implements ValidatorConstraintInterface {
 
-    static validator = new Validator()
-
     isValidate(value: any) {
-        const validator = EmailMobileValidator.validator
-        return validator.isEmail(value) || validator.isMobilePhone(value, "vi-VN")
+        return isEmail(value) || isMobilePhone(value, "vi-VN")
     }
 
     validate(value: any, args: ValidationArguments) {

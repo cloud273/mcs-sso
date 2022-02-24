@@ -1,9 +1,8 @@
-import { Validator } from "class-validator";
+import { isEnum, isString, isEmail, isMobilePhone } from "class-validator";
 import { Language } from "../common/Enum";
 import { Integer } from "../../node/library/utility/Integer";
 import { Constant } from "../../Constant";
 
-const _validator = new Validator()
 
 export class Token {
     
@@ -32,15 +31,15 @@ export class Code {
 export class AppValidator {
 
     public static isLanguageOrNull(data: any): boolean {
-        return data == null || _validator.isEnum(data, Language)
+        return data == null || isEnum(data, Language)
     }
 
     public static isEmail(data: any): boolean {
-        return _validator.isString(data) && _validator.isEmail(data)
+        return isString(data) && isEmail(data)
     }
 
     public static isMobilePhone(data: any): boolean {
-        return _validator.isString(data) && _validator.isMobilePhone(data, "vi-VN")
+        return isString(data) && isMobilePhone(data, "vi-VN")
     }
 
     public static isPhoneOrEmail(data: any): boolean {
@@ -48,7 +47,7 @@ export class AppValidator {
     }
 
     public static isPassword(data: any): boolean {
-        if (_validator.isString(data)) {
+        if (isString(data)) {
             const str: string = data
             return str.length >= 6 && str.length <= 32
         }

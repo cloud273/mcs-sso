@@ -97,9 +97,9 @@ export class AccountController {
     @Get()
     @OnUndefined(RCode.badRequest)
     async get(@Req() request: Request, @Res() response: Response) {
-        const token = request.query.token
-        const password = request.query.password
-        const type = request.query.type
+        const token = request.query.token as string
+        const password = request.query.password as string
+        const type = request.query.type as string
         if (token != null && type != null 
             && (password == null || AppValidator.isPassword(password))
             && Account.validate(undefined, type, undefined, token, undefined)) {
