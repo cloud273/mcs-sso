@@ -1,4 +1,13 @@
-# Git
+# Content
+
+- Account service is a micro service to help your server manage account token for authenticate
+- Api list: https://github.com/cloud273/mcs-sso/blob/main/doc/openapi.yaml
+
+# Todo:
+
+- Migrate to OIDC protocol for more security and standard
+
+# Develop
 
 ### Add submodule
 
